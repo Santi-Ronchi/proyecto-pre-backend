@@ -1,0 +1,28 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Args</th>
+            <th>OS NAME</th>
+            <th>NODE VERSION</th>
+            <th>RSS</th>
+            <th>EXEC PATH</th>
+            <th>P.ID</th>
+            <th>PROJECT DIRECTORY</th>
+            <th>N° of CPUs</th>
+        </tr>
+    </thead>
+    <tbody id="products">
+        {{#if datoInfo}}
+            <tr>
+                <td>{{process}}</td>
+                <td>{{platform}}</td>
+                <td>{{version}}</td>
+                <td>{{memory}}</td>
+                <td>{{path}}</td>
+                <td>{{pid}}</td>
+                <td>{{cwd}}</td>
+                <td>{{CPUs}}</td>
+            </tr>
+        {{/if}}
+    </tbody>
+</table>
