@@ -1,79 +1,67 @@
 const {conexionMongoDB,disconnectMongoDB} = require('../daos/mongodb');
 const cartSchema = require('../schemas/carts');
+const ProductoModel = require('./productCont');
+const products = new ProductoModel();
 
+class Cart {
 
-class Carrito {
-  //ok
-  async createCarrito() {
-    try {
-      await conexionMongoDB();
-      const data = await cartSchema.create({
-        productos: []
-        });
-      disconnectMongoDB();
-        return data._id;
-    } catch (error) {
-      throw Error(error.message);
+    async createCart() {
+        try {
+          await conexionMongoDB();
+          const data = await cartSchema.create({
+            id: Math.floor(Math.random() * 10000000000),
+            productos: [],
+          });
+          await disconnectMongoDB();
+          return data.id;
+        } catch (error) {
+          throw Error(error.message);
+        }
     }
-  }
-//ok
-  async buscarCarrito(numeroCarrito) {
-    try {
-      await conexionMongoDB()
-      const data = await cartSchema.findById(numeroCarrito)
-      disconnectMongoDB();
-        return data;
-    } catch (error) {
-      throw Error(error.message);
-    }
-  }
 
-// ok
-  async addProductToCart(idCart, idProduct) {
-    try {
-      await conexionMongoDB()
-      const dataCart = await cartSchema.findById(idCart);
-      const dataProdu = await Producto.getById(idProduct);
-      if (dataCart && dataProdu) {
-        await schemaCart.updateOne({ _id: idCart }, { $push: { productos: idProduct } })
-   
-        return 'se agrego el producto correctamente';
-      }
-      mongoose.disconnect()
-      throw Error('No hay producto en el carrito');
-    } catch (error) {
-      throw Error(error.message);
+    async getById(numero) {
+        try {
+            await conexionMongoDB();
+            const data = await cartSchema.findById(numero);
+            await disconnectMongoDB();
+            const productList = data.productos
+            return productList;
+          } catch (error) {
+            throw Error(error.message);
+          }
     }
-  }
-//ok
-  async deleteCartById(id) {
-    try {
-      await conexionMongoDB()
-      await cartSchema.findByIdAndRemove(id);
-      mongoose.disconnect()
-      return 'El carrito se borro con exito';
-    } catch (error) {
-      throw Error(error.message);
-    }
-  }
-//no
-  async deleteProductCart(idCart, idProduct) {
-    try {
-      await conexionMongoDB()
-      const produCart = await cartSchema.find({_id:String(idCart)})
-      if (produCart) {
-        produCart.Productos.pull(idProduct);
-        await produCart.save();
-        return 'El producto se borro con exito del carrito';
-      }
-      mongoose.disconnect();
 
-      throw Error('Id does not exist');
-    } catch (error) {
-      throw Error(error.message);
+    async addToCart(cartId, prodId) {
+        try {
+            await conexionMongoDB()
+              await cartSchema.updateOne({ _id: cartId }, { $push: { productos: prodId } })
+            await disconnectMongoDB();
+              return 'Product Added to Cart OK';
+          } catch (error) {
+            throw Error(error.message);
+          }
     }
-  }
 
+    async deleteById(numero) {
+        try {
+            await conexionMongoDB()
+            await cartSchema.findByIdAndRemove(numero);
+            await disconnectMongoDB();
+            return 'Cart Deleted OK';
+          } catch (error) {
+            throw Error(error.message);
+          }
+    }
+
+    async deleteProductById(cartId, prodId) {
+        try {
+            await conexionMongoDB()
+            await cartSchema.updateOne({ _id: cartId }, { $pull: { productos: prodId } })
+            await disconnectMongoDB();
+          } catch (error) {
+            throw Error(error.message);
+          }
+    }
 }
 
-module.exports = Carrito
+module.exports = Cart;

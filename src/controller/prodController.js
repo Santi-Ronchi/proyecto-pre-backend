@@ -1,17 +1,17 @@
 const Products = require('../container/productCont');
 const Product = new Products();
-const {faker} = require('@faker-js/faker');
 
 module.exports = {
   createProduct: async (req, res) => {
     try {
-      const prod = {producto:{
-        id: Math.floor(Math.random() * 1000000000), ///hacer que no se repita
-        nombre: req.body.nombre,
-        precio: req.body.precio,
-        foto: req.body.foto,
-        descripcion: req.body.descripcion
-      }}
+      const prod = {
+        id: Math.floor(Math.random() * 10000000000), ///hacer que no se repita
+        name: req.body.name,
+        price: req.body.price,
+        url: req.body.url,
+        description: req.body.description,
+        stock: req.body.stock,
+      };
       const id = await Product.save(prod);
       res.redirect('/api/home/carga')
     } catch (error) {
@@ -35,7 +35,6 @@ module.exports = {
     try {
       const datos = await Product.getAll()
       const nombre = req.user.nombre;
-      console.log(datos);
       res.render('home',{ nombre, datos })
     } catch (error) {
       res.status(500).send({
@@ -49,7 +48,6 @@ module.exports = {
     const idProduct = req.params.id;
     try {
       const data = await Product.getById(idProduct);
-      console.log(data)
       res.status(200).send({
         status: 200,
         data,

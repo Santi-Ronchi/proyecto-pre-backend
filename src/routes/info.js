@@ -2,18 +2,29 @@ const express = require('express');
 const infoRouter = express.Router();
 const numCPUs = require('os').cpus().length
 
+function getMetadata(){
+    datos=[];
+    let argumentos = []
+    process.argv.forEach((val, index) => {
+        if (index > 1){
+            argumentos.push(`${val}`)
+        }
+    });
+    elemento = {};
+    elemento.arguments = argumentos;
+    elemento.osname = process.platform;
+    elemento.nodeVer = process.version;
+    elemento.rssVer = process.memoryUsage().rss;
+    elemento.execPath = process.execPath;
+    elemento.processID = process.pid;
+    elemento.projDir = process.cwd();
+    elemento.cpuNum = require('os').cpus().length
+    datos.push(elemento);
+  }
+
 infoRouter.get('/', (req, res) => {
-    const datoInfo = {
-        process: process,
-        platform: process.platform,
-        version: process.version,
-        memory: process.memoryUsage(),
-        path: process.execPath,
-        pid: process.pid,
-        cwd: process.cwd(),
-        CPUs: numCPUs
-    }
-    res.render('info', datoInfo)
+  getMetadata();
+  res.render('info', {datos});
 })
 
 module.exports = infoRouter

@@ -12,7 +12,8 @@ class User {
             direccion: usuario.direccion,
             edad: usuario.edad,
             telefono: usuario.telefono,
-            foto: usuario.foto
+            foto: usuario.foto,
+            cartID: usuario.cartID
           });
           disconnectMongoDB();
           return data;

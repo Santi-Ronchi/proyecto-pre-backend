@@ -7,6 +7,8 @@ const dotenv = require('dotenv').config();
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('./container/userCont');
 const user = new User();
+const Cart = require('./container/cartCont');
+const cart = new Cart();
 const { isValidPassword , createHash } = require('./funciones/funcBcrypt');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
@@ -61,7 +63,9 @@ if (config.MODO == 'CLUSTER' && cluster.isPrimary){
         if (existe) {
           return done(null, false)
         } else {
-          const usuarioExistente = {nombre: req.body.nombre, email: username, password: createHash(password),direccion: req.body.direccion, edad: req.body.edad, telefono: req.body.telefono , foto: req.body.foto }
+          const userCart = await cart.createCart();
+          console.log(userCart);
+          const usuarioExistente = {nombre: req.body.nombre, email: username, password: createHash(password),direccion: req.body.direccion, edad: req.body.edad, telefono: req.body.telefono , foto: req.body.foto, cartID: userCart}
           const data = await user.createUsuario(usuarioExistente)
           done(null, { email: data.email })
         }
@@ -80,7 +84,6 @@ if (config.MODO == 'CLUSTER' && cluster.isPrimary){
       if (!isValidPassword(existe, password)){
         return done(null, false)
       } 
-      console.log("existe y la pass esta bien");
       return done(null, {nombre:existe.nombre,email:existe.email})
     })
   )
@@ -113,13 +116,13 @@ if (config.MODO == 'CLUSTER' && cluster.isPrimary){
   const homeRouter = require('./routes/home')
   const infoRouter = require('./routes/info')
   const randomsRouter = require('./routes/randoms')
-  //const cartRouter = require('./routes/routeCart')
+  const cartRouter = require('./routes/routeCart')
 
   app.use('/api', loginRouter);
   app.use('/api/home', homeRouter);
   app.use('/info', infoRouter);
   app.use('/api/randoms', randomsRouter);
-  //app.use('/api/cart', cartRouter)
+  app.use('/api/cart', cartRouter)
 
   app.use('/',(req, res) => {
     try {

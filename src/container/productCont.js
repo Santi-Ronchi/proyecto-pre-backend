@@ -3,10 +3,10 @@ const productSchema = require('../schemas/products');
 
 class Productos {
   
-  async save(producto) {
+  async save(product) {
     try {
       await conexionMongoDB()
-      const data = await productSchema.create(producto)
+      const data = await productSchema.create(product)
       disconnectMongoDB()
         return data
     } catch (error) {
@@ -28,7 +28,7 @@ class Productos {
   async getAll() {
     try {
       await conexionMongoDB()
-      const data = await productSchema.find()
+      const data = await productSchema.find().lean()
       disconnectMongoDB()
 
         return data;

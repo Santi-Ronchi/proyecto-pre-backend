@@ -1,10 +1,17 @@
 const express = require('express');
-const cartRouter = express.Router();
+const routerCarro = express.Router();
 const { chequeoAutentificacion } = require('../funciones/funcAute')
+
 const {
-    mostrarCarro
+    getThisCart,
+    deleteProductFromCart,
+    addProductToCart,
   } = require('../controller/cartController');
 
-cartRouter.get('/', chequeoAutentificacion, mostrarCarro)
+routerCarro.get('/', chequeoAutentificacion ,getThisCart);
 
-module.exports = cartRouter;
+routerCarro.delete('/:prodId', deleteProductFromCart);
+
+routerCarro.post('/:prodId', addProductToCart);
+
+module.exports = routerCarro;
