@@ -35,7 +35,11 @@ module.exports = {
     try {
       const datos = await Product.getAll()
       const nombre = req.user.nombre;
-      res.render('home',{ nombre, datos })
+      if (!req.session.carrito) {
+        req.session.carrito = req.user.cartID
+      }
+      let carroHbs = req.session.carrito
+      res.render('home',{ nombre, datos, carroHbs })
     } catch (error) {
       res.status(500).send({
         status: 500,

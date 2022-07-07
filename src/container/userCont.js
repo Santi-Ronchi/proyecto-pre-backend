@@ -23,16 +23,15 @@ class User {
     }
 
     async buscarUsuario(email) {
-        try {
-          await conexionMongoDB()
-          const data = await userSchema.find({email:email})
-        disconnectMongoDB();
-        return data[0];
+      try {
+        await conexionMongoDB()
+        const data = await userSchema.find({email:email})
+        await disconnectMongoDB();
+          return data[0];
       } catch (error) {
         throw Error(error.message);
       }
     }
-
 }
 
 module.exports = User;

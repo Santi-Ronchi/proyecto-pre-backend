@@ -49,14 +49,14 @@ module.exports = {
     getThisCart: async (req, res) => {
         console.log("ENTRE EN GET THIS CART Y: " + req.user.cartID);
         const carroPedido = await contenedorCarro.getById(req.user.cartID);
-        res.status(200).send({
-            status: 200,
-            data: {
-                carroPedido
-            },
-            message: 'Action OK',
-          });
-          const productos = carroPedido.productos;
+        //res.status(200).send({
+        //    status: 200,
+        //    data: {
+        //        carroPedido
+        //    },
+        //    message: 'Action OK',
+        //  });
+        const productos = carroPedido.productos;
         res.render("listaCarro", {productos: productos, req})
     },
 

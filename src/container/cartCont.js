@@ -22,9 +22,9 @@ class Cart {
     async getById(numero) {
         try {
             await conexionMongoDB();
-            const data = await cartSchema.findById(numero);
-            await disconnectMongoDB();
+            const data = await cartSchema.findOne({id: numero});
             const productList = data.productos
+            await disconnectMongoDB();
             return productList;
           } catch (error) {
             throw Error(error.message);
